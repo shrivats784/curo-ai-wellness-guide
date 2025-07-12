@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { APIKeyModal } from '@/components/APIKeyModal';
@@ -27,6 +27,22 @@ const HomePage = () => {
   const [showAPIModal, setShowAPIModal] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Dynamic theme based on toggles
+  const getThemeClass = () => {
+    if (showDietTips && showExerciseTips) return 'theme-combined';
+    if (showDietTips) return 'theme-diet';
+    if (showExerciseTips) return 'theme-exercise';
+    return '';
+  };
+
+  useEffect(() => {
+    const themeClass = getThemeClass();
+    document.documentElement.className = themeClass;
+    return () => {
+      document.documentElement.className = '';
+    };
+  }, [showDietTips, showExerciseTips]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,28 +154,39 @@ Keep responses professional and clear.`;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 p-4">
-      <div className="max-w-2xl mx-auto pt-8">
-        <div className="flex items-center gap-4 mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 p-4 transition-all duration-700">
+      <div className="max-w-2xl mx-auto pt-8 animate-fade-in">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="hover:bg-primary/10 transition-all duration-200"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <h1 className="text-3xl font-bold text-primary">Curo.ai</h1>
+          </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigate('/')}
-            className="hover:bg-primary/10"
+            className="hover:bg-primary/10 transition-all duration-200"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            <Home className="h-4 w-4 mr-2" />
+            Home
           </Button>
-          <h1 className="text-3xl font-bold text-primary">Curo.ai</h1>
         </div>
 
-        <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
+        <Card className="shadow-xl border-0 bg-card/95 backdrop-blur animate-scale-in transition-all duration-500">
           <CardHeader>
-            <CardTitle className="text-2xl text-center text-foreground">
+            <CardTitle className="text-2xl text-center text-foreground animate-slide-up">
               How can we help you today?
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 animate-slide-up delay-200">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="symptoms" className="text-base font-medium">
@@ -175,7 +202,7 @@ Keep responses professional and clear.`;
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 transition-all duration-300 hover:bg-muted/70">
                   <div className="space-y-1">
                     <Label htmlFor="diet-toggle" className="font-medium">
                       Show Diet Tips
@@ -191,7 +218,7 @@ Keep responses professional and clear.`;
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 transition-all duration-300 hover:bg-muted/70">
                   <div className="space-y-1">
                     <Label htmlFor="exercise-toggle" className="font-medium">
                       Show Exercise Tips
@@ -211,7 +238,7 @@ Keep responses professional and clear.`;
               <Button
                 type="submit"
                 size="lg"
-                className="w-full text-lg py-6 rounded-xl"
+                className="w-full text-lg py-6 rounded-xl transition-all duration-300 hover:scale-105 transform hover:-translate-y-1"
                 disabled={loading}
               >
                 {loading ? (

@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, RefreshCw, AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertTriangle, CheckCircle, AlertCircle, Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HealthResponse {
   category: string;
@@ -17,6 +18,7 @@ interface HealthResultsProps {
 }
 
 export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResultsProps) => {
+  const navigate = useNavigate();
   const getCategoryIcon = () => {
     switch (results.category.toLowerCase()) {
       case 'dangerous':
@@ -44,26 +46,37 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 p-4">
-      <div className="max-w-4xl mx-auto pt-8">
-        <div className="flex items-center gap-4 mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 p-4 transition-all duration-700">
+      <div className="max-w-4xl mx-auto pt-8 animate-fade-in">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="hover:bg-primary/10 transition-all duration-200"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <h1 className="text-3xl font-bold text-primary">Your Health Report</h1>
+          </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            onClick={onBack}
-            className="hover:bg-primary/10"
+            onClick={() => navigate('/')}
+            className="hover:bg-primary/10 transition-all duration-200"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            <Home className="h-4 w-4 mr-2" />
+            Home
           </Button>
-          <h1 className="text-3xl font-bold text-primary">Your Health Report</h1>
         </div>
 
         <div className="space-y-6">
           {/* Category Card */}
-          <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
+          <Card className="shadow-xl border-0 bg-card/95 backdrop-blur animate-scale-in">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 animate-slide-up">
                 Health Assessment
                 {getCategoryIcon()}
               </CardTitle>
@@ -71,7 +84,7 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
             <CardContent>
               <Badge 
                 variant={getCategoryColor() as any} 
-                className="text-lg px-4 py-2"
+                className="text-lg px-4 py-2 animate-fade-in"
               >
                 {results.category}
               </Badge>
@@ -79,15 +92,15 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
           </Card>
 
           {/* Relief Steps */}
-          <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
+          <Card className="shadow-xl border-0 bg-card/95 backdrop-blur animate-scale-in delay-200">
             <CardHeader>
-              <CardTitle>Recommended Relief Steps</CardTitle>
+              <CardTitle className="animate-slide-up">Recommended Relief Steps</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {results.reliefSteps.map((step, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mt-0.5">
+                  <li key={index} className="flex items-start gap-3 animate-slide-up" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
+                    <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mt-0.5 transition-all duration-200 hover:scale-110">
                       {index + 1}
                     </span>
                     <span className="text-foreground">{step}</span>
@@ -99,9 +112,9 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
 
           {/* Diet Tips */}
           {results.dietTips && (
-            <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
+            <Card className="shadow-xl border-0 bg-card/95 backdrop-blur animate-scale-in delay-300">
               <CardHeader>
-                <CardTitle>Diet Recommendations</CardTitle>
+                <CardTitle className="animate-slide-up">Diet Recommendations</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -128,9 +141,9 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
 
           {/* Exercise Tips */}
           {results.exerciseTips && (
-            <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
+            <Card className="shadow-xl border-0 bg-card/95 backdrop-blur animate-scale-in delay-400">
               <CardHeader>
-                <CardTitle>Exercise Recommendations</CardTitle>
+                <CardTitle className="animate-slide-up">Exercise Recommendations</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -162,11 +175,11 @@ export const HealthResults = ({ results, onNewConsultation, onBack }: HealthResu
           </Card>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pb-8">
+          <div className="flex gap-4 pb-8 animate-fade-in delay-500">
             <Button
               onClick={onNewConsultation}
               size="lg"
-              className="flex-1 text-lg py-6 rounded-xl"
+              className="flex-1 text-lg py-6 rounded-xl transition-all duration-300 hover:scale-105 transform hover:-translate-y-1"
             >
               <RefreshCw className="mr-2 h-5 w-5" />
               New Consultation

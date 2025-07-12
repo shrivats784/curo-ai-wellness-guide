@@ -48,6 +48,36 @@
     --healthcare-light-gray: 210 20% 98%;
   }
 
+  /* Diet Theme */
+  .theme-diet {
+    --background: 120 20% 98%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 120 40% 96%;
+    --accent: 120 40% 94%;
+    --ring: 142 76% 36%;
+  }
+
+  /* Exercise Theme */
+  .theme-exercise {
+    --background: 25 20% 98%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 25 40% 96%;
+    --accent: 25 40% 94%;
+    --ring: 25 95% 53%;
+  }
+
+  /* Combined Theme */
+  .theme-combined {
+    --background: 270 20% 98%;
+    --primary: 270 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 40% 96%;
+    --accent: 270 40% 94%;
+    --ring: 270 70% 50%;
+  }
+
   .dark {
     --background: 213 27% 8%;
     --foreground: 210 20% 98%;
