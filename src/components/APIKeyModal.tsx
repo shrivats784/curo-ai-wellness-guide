@@ -19,7 +19,7 @@ export const APIKeyModal = ({ open, onClose, onSubmit }: APIKeyModalProps) => {
     if (!apiKey.trim()) {
       toast({
         title: "API Key Required",
-        description: "Please enter your OpenAI API key to continue.",
+        description: "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",
         variant: "destructive",
       });
       return;
