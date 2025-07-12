@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Loader2, ArrowLeft, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { APIKeyModal } from '@/components/APIKeyModal';
 import { HealthResults } from '@/components/HealthResults';
 
 interface HealthResponse {
@@ -24,17 +22,15 @@ const HomePage = () => {
   const [showExerciseTips, setShowExerciseTips] = useState(false);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<HealthResponse | null>(null);
-  const [showAPIModal, setShowAPIModal] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { toast } = useToast();  
 
-  // Dynamic theme based on toggles
-  const getThemeClass = () => {
+  const getThemeClass = useCallback(() => {
     if (showDietTips && showExerciseTips) return 'theme-combined';
     if (showDietTips) return 'theme-diet';
     if (showExerciseTips) return 'theme-exercise';
     return '';
-  };
+  }, [showDietTips, showExerciseTips]);
 
   useEffect(() => {
     const themeClass = getThemeClass();
@@ -42,11 +38,11 @@ const HomePage = () => {
     return () => {
       document.documentElement.className = '';
     };
-  }, [showDietTips, showExerciseTips]);
+  }, [showDietTips, showExerciseTips, getThemeClass]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!symptoms.trim()) {
       toast({
         title: "Please enter your symptoms",
@@ -56,9 +52,14 @@ const HomePage = () => {
       return;
     }
 
-    const apiKey = localStorage.getItem('openai_api_key');
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
     if (!apiKey) {
-      setShowAPIModal(true);
+      toast({
+        title: "API Key Missing",
+        description: "OpenAI API key is not configured in the environment.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -124,11 +125,10 @@ Keep responses professional and clear.`;
 
     const data = await response.json();
     const content = data.choices[0].message.content;
-    
+
     try {
       return JSON.parse(content);
     } catch {
-      // Fallback if JSON parsing fails
       return {
         category: 'Normal',
         reliefSteps: [content],
@@ -254,12 +254,6 @@ Keep responses professional and clear.`;
           </CardContent>
         </Card>
       </div>
-
-      <APIKeyModal 
-        open={showAPIModal}
-        onClose={() => setShowAPIModal(false)}
-        onSubmit={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
-      />
     </div>
   );
 };
